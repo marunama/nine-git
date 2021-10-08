@@ -116,11 +116,13 @@ class SignUpViewController: UIViewController {
             
             guard let uid = res?.user.uid else {return}
             guard let username = self.usernameTextField.text else {return}
+            
             let docData = [
                 "email": email,
                 "username": username,
                 "createAt": Timestamp(),
-                "profileImageUrl": profileImageUrl
+                "profileImageUrl": profileImageUrl,
+                
                 
             ] as [String : Any]
             

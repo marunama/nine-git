@@ -55,7 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    // Print full message.
 //    print(userInfo)
 //  }
-
   // [START receive_message]
   func application(_ application: UIApplication,
                    didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -91,7 +90,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     print("APNs token retrieved: \(deviceToken)")
 
     // With swizzling disabled you must set the APNs token here.
-      Messaging.messaging().apnsToken = deviceToken;
+     Messaging.messaging().apnsToken = deviceToken
+//      let token = Messaging.messaging().fcmToken
+//      Firestore.firestore().collection("users").docData("(ユーザーのuid)").set({
+//          uid: "(ユーザーのuid)",
+//          fcmToken: token
+//      })
   }
     
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
@@ -171,3 +175,18 @@ extension AppDelegate: MessagingDelegate {
 
   // [END refresh_token]
 }
+
+//extension AppDelegate: MessagingDelegate {
+//    // fcmTokenを受け取った時に呼ばれる。
+//    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+//        if let uid = Auth.auth().currentUser?.uid {
+//            self.setFcmToken(userId: uid, fcmToken: fcmToken)
+//        }
+//    }
+//    
+//    func setFcmToken(userId: String, fcmToken: String) {
+//        let reference = Database.database().reference().child("user").child(userId).child("fcm_token")
+//        UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
+//        reference.setValue(fcmToken)
+//    }
+//}
