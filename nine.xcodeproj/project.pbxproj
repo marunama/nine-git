@@ -35,7 +35,7 @@
 		CEB94E20267742FA0098F398 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB94E1F267742F60098F398 /* Message.swift */; };
 		CEB94E25267CA8930098F398 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEB94E24267CA8920098F398 /* Login.storyboard */; };
 		CEB94E2A267CAFFE0098F398 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB94E29267CAFFE0098F398 /* LoginViewController.swift */; };
-		CEDEB20B2725191D00EE827B /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDEB20A2725191D00EE827B /* UserDefaults.swift */; };
+		CEDEB20E2725291800EE827B /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDEB20D2725291800EE827B /* UserDefaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,7 +96,7 @@
 		CEB94E24267CA8920098F398 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		CEB94E29267CAFFE0098F398 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		CED9055326A7FC8500309B42 /* nine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = nine.entitlements; sourceTree = "<group>"; };
-		CEDEB20A2725191D00EE827B /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		CEDEB20D2725291800EE827B /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		D25DB74A06EB57B056D4E202 /* Pods_nineTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nineTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -176,8 +176,8 @@
 		CE53DEC7265F8AD200BDEFD8 /* nine */ = {
 			isa = PBXGroup;
 			children = (
-				CEDEB2092725191D00EE827B /* Common */,
 				CED9055326A7FC8500309B42 /* nine.entitlements */,
+				CEDEB20C272528D400EE827B /* Common */,
 				CEB94DEF2670AB5F0098F398 /* Models */,
 				CEB94D2726675FCC0098F398 /* Extensions */,
 				CEB94D2626675FA30098F398 /* Views */,
@@ -272,13 +272,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		CEDEB2092725191D00EE827B /* Common */ = {
+		CEDEB20C272528D400EE827B /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				CEDEB20A2725191D00EE827B /* UserDefaults.swift */,
+				CEDEB20D2725291800EE827B /* UserDefaults.swift */,
 			);
 			name = Common;
-			path = "../../nine-git/nine/Common";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -538,7 +537,7 @@
 				CEB94E20267742FA0098F398 /* Message.swift in Sources */,
 				CE53DECB265F8AD200BDEFD8 /* SceneDelegate.swift in Sources */,
 				CEB94E2A267CAFFE0098F398 /* LoginViewController.swift in Sources */,
-				CEDEB20B2725191D00EE827B /* UserDefaults.swift in Sources */,
+				CEDEB20E2725291800EE827B /* UserDefaults.swift in Sources */,
 				CEB94E1B26733FEF0098F398 /* ChatRoom.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
