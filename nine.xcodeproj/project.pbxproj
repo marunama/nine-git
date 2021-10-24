@@ -177,7 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				CED9055326A7FC8500309B42 /* nine.entitlements */,
-				CEDEB20C272528D400EE827B /* Common */,
+				CEDEB20F27252ADD00EE827B /* Common */,
 				CEB94DEF2670AB5F0098F398 /* Models */,
 				CEB94D2726675FCC0098F398 /* Extensions */,
 				CEB94D2626675FA30098F398 /* Views */,
@@ -272,12 +272,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		CEDEB20C272528D400EE827B /* Common */ = {
+		CEDEB20F27252ADD00EE827B /* Common */ = {
 			isa = PBXGroup;
 			children = (
 				CEDEB20D2725291800EE827B /* UserDefaults.swift */,
 			);
-			name = Common;
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
