@@ -116,11 +116,15 @@ class SignUpViewController: UIViewController {
             
             guard let uid = res?.user.uid else {return}
             guard let username = self.usernameTextField.text else {return}
+            
+            let fcmToken = UserDefaults.standard.loadFcmToken() ?? ""
+            
             let docData = [
                 "email": email,
                 "username": username,
                 "createAt": Timestamp(),
-                "profileImageUrl": profileImageUrl
+                "profileImageUrl": profileImageUrl,
+                "fcmToken": fcmToken
                 
             ] as [String : Any]
             
@@ -137,6 +141,19 @@ class SignUpViewController: UIViewController {
                 
             }
             
+//            Firestore.firestore().collection("users").document(uid).setData(["fcmToken": fcmToken ?? ""], merge: true) {
+//                // error
+//                (err) in
+//                if let err = err {
+//                    print("データベースへの保存が失敗\(err)")
+//                    HUD.hide()
+//                    return
+//                }
+//                print("データベースへの保存が成功")
+//                HUD.hide()
+//                self.dismiss(animated: true, completion: nil)
+//
+//            }
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
