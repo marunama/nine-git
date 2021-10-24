@@ -140,9 +140,9 @@ class ChatListViewController: UIViewController {
         let logoutBarButton = UIBarButtonItem(title: "ログアウト", style: .plain, target: self, action: #selector(tappedLogoutButton))
         
         navigationItem.rightBarButtonItem = rigntBarButton
-        navigationItem.rightBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .black
         navigationItem.leftBarButtonItem = logoutBarButton
-        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
     @objc private func tappedLogoutButton() {
