@@ -43,23 +43,26 @@ exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
         console.log("receiverRef")
         console.log(receiverRef)
         // 受信者の情報にアクセスする
-        receiverRef.get().then(function(doc){
-                if (doc.exists === true) {
-                    // 受信者の情報を取得(name,fcmToken)
-                    const receiver = doc.data()
-                    const fcmToken = receiver["fcmToken"]
-                    const senderName = message["username"]
-                    const content = message["content"]
-                    // 通知のタイトル
-                    const title = `$senderName`
-                    // 通知の内容
-                    const body = `$content`
-                    sendPushMessage(fcmToken,title,body,"1");
-                    console.log("newMessage")
-                 } else {
-                    console.log("notExists")
-                }
-            })
+//        receiverRef.get().then(function(doc){
+//                if (doc.exists === true) {
+//                    // 受信者の情報を取得(name,fcmToken)
+//                    const receiver = doc.data()
+//                    const fcmToken = receiver["fcmToken"]
+//                    const senderName = message["username"]
+//                    const content = message["content"]
+//                    // 通知のタイトル
+//                    const title = `$senderName`
+//                    // 通知の内容
+//                    const body = `$content`
+//                    sendPushMessage(fcmToken,title,body,"1");
+//                    console.log("newMessage")
+//                 } else {
+//                    console.log("notExists")
+//                }
+        
+        //admin.messaging().send(pushMessage("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", "テスト"))
+        //admin.messaging().sendToDevice("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", payload);
+        sendPushMessage("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", "テスト","本文","1");
 })
 
 
