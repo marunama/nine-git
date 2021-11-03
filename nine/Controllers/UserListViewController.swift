@@ -41,11 +41,12 @@ class UserListViewController: UIViewController {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         guard let partnerUid = self.selectedUser?.uid else { return }
         let members = [uid, partnerUid]
-        
+        let membersfcm = [self.selectedUser?.fcmToken]
         let docData = [
             "members": members,
             "latestMessageId": "",
-            "createdAt": Timestamp()
+            "createdAt": Timestamp(),
+            "membersfcm": membersfcm
         
         ] as [String : Any]
         

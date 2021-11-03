@@ -36,12 +36,22 @@ const sendPushMessage = function(token, title, body, badge) {
 // 新規依頼作時
 exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
     .onWrite( async (snapshot, context) => {
-        // ここにmessageのデータが入っている(senderId,senderName,receiverId,content)
-        const message = snapshot.after.data()
-        console.log(message)
-        const receiverRef = firestore.collection("users") // userにidが付与されていないようなので、一旦emailで誰に渡すのか判別するようにします。
-        console.log("receiverRef")
-        console.log(receiverRef)
+        // ここチャットルームのデータが入っている(createdAt, latestMessageId, members)
+        const chatInfo = snapshot.after.data()
+        console.log("チャットルームの情報")
+        console.log(chatInfo)
+
+        const receiverFcmToken = chatInfo.membersfcm
+
+        console.log("トークン")
+        console.log(receiverFcmToken)
+        
+
+        
+       
+        
+        
+
         // 受信者の情報にアクセスする
 //        receiverRef.get().then(function(doc){
 //                if (doc.exists === true) {
@@ -62,7 +72,7 @@ exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
         
         //admin.messaging().send(pushMessage("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", "テスト"))
         //admin.messaging().sendToDevice("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", payload);
-        sendPushMessage("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", "テスト","本文","1");
+        sendPushMessage("receiverFcmToken", "新着","新しいメッセージ","1");
 })
 
 
@@ -130,3 +140,4 @@ exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
 
 //     return true;
 //   });
+
