@@ -16,6 +16,7 @@ class UserListViewController: UIViewController {
     private let cellId = "cellId"
     private var users = [User]()
     private var selectedUser: User?
+    private var selectedUsers: [User] = []
     
     @IBOutlet weak var userListTableView: UITableView!
     
@@ -28,6 +29,8 @@ class UserListViewController: UIViewController {
         userListTableView.tableFooterView = UIView()
         userListTableView.delegate = self
         userListTableView.dataSource = self
+        userListTableView.allowsMultipleSelection = true
+        
         startChatButton.layer.cornerRadius = 15
         startChatButton.isEnabled = false
         startChatButton.addTarget(self, action: #selector(tappedStartChatButton), for: .touchUpInside)
@@ -42,13 +45,26 @@ class UserListViewController: UIViewController {
         guard let partnerUid = self.selectedUser?.uid else { return }
         let members = [uid, partnerUid]
         let membersfcm = [self.selectedUser?.fcmToken]
+        
+        // group_chat
+        let myfcmToken = UserDefaults.standard.value(forKey: notificationFcmToken) as? String ?? ""
+        var groupMembers: [String] = [uid]
+        var groupfcms: [String] = [myfcmToken]
+        selectedUsers.forEach { user in
+            groupMembers.append(user.uid ?? "")
+            groupfcms.append(user.fcmToken)
+        }
+        
         let docData = [
             "members": members,
             "latestMessageId": "",
             "createdAt": Timestamp(),
-            "membersfcm": membersfcm
-        
+            "membersfcm": membersfcm,
+            "groupMembers": groupMembers,
+            "groupfcms": groupfcms,
         ] as [String : Any]
+        
+        print(docData)
         
         Firestore.firestore().collection("chatRooms").addDocument(data: docData) { (err) in
             if let err = err {
@@ -89,12 +105,7 @@ class UserListViewController: UIViewController {
     }
 }
 
-
 extension UserListViewController: UITableViewDelegate, UITableViewDataSource {
-    
-   
-    
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
@@ -104,8 +115,6 @@ extension UserListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = userListTableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserListTableViewCell
         cell.user = users[indexPath.row]
-        
-        
         return cell
     }
     
@@ -113,11 +122,28 @@ extension UserListViewController: UITableViewDelegate, UITableViewDataSource {
         startChatButton.isEnabled = true
         let user = users[indexPath.row]
         self.selectedUser = user
-        
-        print("user:", user.username)
+        // group_chat
+        self.selectedUsers.append(user)
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
     }
     
-    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        // group_chat
+        let  deselectUser = users[indexPath.row]
+        var frag = 0
+        for user in selectedUsers {
+            if user.fcmToken == deselectUser.fcmToken {
+                selectedUsers.remove(at: frag)
+            }
+            frag += 1
+        }
+        if selectedUsers.count == 0 {
+            startChatButton.isEnabled = false
+        }
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .none
+    }
 }
 
 class UserListTableViewCell: UITableViewCell {

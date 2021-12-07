@@ -28,8 +28,8 @@ class ChatListViewController: UIViewController {
     @IBOutlet weak var chatListTableView: UITableView!
     
     override func viewDidLoad(){
-      super.viewDidLoad()
-      
+        super.viewDidLoad()
+        
         setUpViews()
         confirmLoggedInUser()
         fetchChatroomInfoFromFirestore()
@@ -42,7 +42,7 @@ class ChatListViewController: UIViewController {
         
     }
     
- 
+    
     
     func fetchChatroomInfoFromFirestore() {
         chatRoomListener?.remove()
@@ -50,7 +50,7 @@ class ChatListViewController: UIViewController {
         chatListTableView.reloadData()
         
         
-       chatRoomListener = Firestore.firestore().collection("chatRooms")
+        chatRoomListener = Firestore.firestore().collection("chatRooms")
             .addSnapshotListener {(snapshots, err) in
                 
                 if let err = err {
@@ -65,65 +65,81 @@ class ChatListViewController: UIViewController {
                         
                     case .modified, .removed:
                         print("nothing")
-                    
+                        
                     }
                     
                 } )
-        }
+            }
     }
     
     private func handleAddedDocumentChange(documentChange: DocumentChange) {
         
         let dic = documentChange.document.data()
         let chatroom = ChatRoom(dic: dic)
+        let documentId = documentChange.document.documentID
         chatroom.documentID = documentChange.document.documentID
-                
+        
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        let isContain = chatroom.members.contains(uid)
-        
-        
+        let isContain = chatroom.groupMembers.contains(uid)
         if !isContain {return}
         
-        chatroom.members.forEach { (memberUid) in
-            if memberUid != uid {
-                Firestore.firestore().collection("users").document(memberUid).getDocument { (userSnapshot, err) in
+       //処理
+        fetchUsersData(uid: uid, documentId: documentId, chatroom: chatroom) { chatroom in
+            if let chatroom = chatroom {
+                //group
+                guard let chatroomId = chatroom.documentID else { return }
+                let latestMessageId = chatroom.latestMessageId
+                
+                if latestMessageId == "" {
+                    self.chatrooms.append(chatroom)
+                    self.chatListTableView.reloadData()
+                    return
+                }
+                
+                Firestore.firestore().collection("chatRooms").document(chatroomId).collection("messages").document(latestMessageId).getDocument { (messageSnapshot, err) in
                     if let err = err {
-                        print("ユーザー情報の取得に失敗\(err)")
+                        print("最新情報の取得に失敗\(err)")
                         return
                     }
                     
-                    guard let dic = userSnapshot?.data() else { return }
-                    let user = User(dic: dic)
-                    user.uid = documentChange.document.documentID
-                    chatroom.partnerUser = user
-                    
-                    guard let chatroomId = chatroom.documentID else { return }
-                    let latestMessageId = chatroom.latestMessageId
-                    
-                    if latestMessageId == "" {
-                        self.chatrooms.append(chatroom)
-                        self.chatListTableView.reloadData()
-                        return
+                    guard let dic = messageSnapshot?.data() else { return }
+                    let message = Message(dic: dic)
+                    chatroom.latestMessage = message
+                    self.chatrooms.append(chatroom)
+                    self.chatListTableView.reloadData()
+                }
+            }
+        }
+    }
+    private func fetchUsersData(uid: String, documentId: String, chatroom: ChatRoom, complite: @escaping (ChatRoom?) -> ()) {
+        var frag = 1
+        chatroom.groupMembers.forEach { (memberUid) in
+            if memberUid != uid {
+                fetchUser(memberUid: memberUid,documentId: documentId) { user in
+                    frag += 1
+                    if let user = user {
+                        chatroom.partnerUser = user
+                        chatroom.groupUsers.append(user)
                     }
-                    
-                    Firestore.firestore().collection("chatRooms").document(chatroomId).collection("messages").document(latestMessageId).getDocument { (messageSnapshot, err) in
-                        if let err = err {
-                            print("最新情報の取得に失敗\(err)")
-                            return
-                        }
-                        
-                        guard let dic = messageSnapshot?.data() else { return }
-                        let message = Message(dic: dic)
-                        chatroom.latestMessage = message
-                        
-                        
-                        self.chatrooms.append(chatroom)
-                        self.chatListTableView.reloadData()
+                    if frag == chatroom.groupMembers.count {
+                        complite(chatroom)
                     }
                 }
             }
         }
-        
+    }
+    // Userを一人一人fetch
+    private func fetchUser(memberUid: String, documentId: String,complite: @escaping (User?) -> ()) {
+        Firestore.firestore().collection("users").document(memberUid).getDocument { (userSnapshot, err) in
+            if let err = err {
+                print("ユーザー情報の取得に失敗\(err)")
+                complite(nil)
+            }
+            guard let dic = userSnapshot?.data() else { return }
+            let user = User(dic: dic)
+            user.uid = documentId
+            complite(user)
+        }
     }
     
     private func setUpViews() {
@@ -159,7 +175,7 @@ class ChatListViewController: UIViewController {
             pushLoginViewController()
         }
     }
-   
+    
     private func pushLoginViewController() {
         let storyboard = UIStoryboard(name: "SignUp", bundle: nil)
         let signUpViewController = storyboard.instantiateViewController(withIdentifier: "SignUpViewController")as! SignUpViewController
@@ -193,11 +209,7 @@ class ChatListViewController: UIViewController {
             
             
         }
-        
     }
-    
-   
-    
 }
 
 extension ChatListViewController: UITableViewDelegate, UITableViewDataSource {
