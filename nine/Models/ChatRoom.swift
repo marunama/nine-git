@@ -17,10 +17,13 @@ class ChatRoom {
     var latestMessage: Message?
     var documentID: String?
     var partnerUser: User?
+    var groupMembers: [String]
+    var groupUsers: [User] = []
     
     init(dic: [String: Any]) {
         self.latestMessageId = dic["latestMessageId"] as? String ?? ""
         self.members = dic["members"] as? [String] ?? [String]()
         self.createdAt = dic["createdAt"] as? Timestamp ?? Timestamp()
+        self.groupMembers = dic["groupMembers"] as? [String] ?? [String]()
     }
 }
