@@ -109,6 +109,20 @@ class  ChatRoomViewController: UIViewController {
                     let dic = documentChange.document.data()
                     let message = Message(dic: dic)
                     message.partnerUser = self.chatroom?.partnerUser
+                    var messageUser: User?
+                    
+                    if let users = self.chatroom?.groupUsers {
+                        for user in users {
+                            if message.name == user.username {
+                                messageUser = user
+                            }
+                        }
+                    }
+                    if let messageUser = messageUser {
+                        message.partnerUser = messageUser
+                    }else{
+                        message.partnerUser = self.user
+                    }
                     
                     self.messages.append(message)
                     
