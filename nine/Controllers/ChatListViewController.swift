@@ -139,6 +139,8 @@ class ChatListViewController: UIViewController {
             let user = User(dic: dic)
             user.uid = documentId
             complite(user)
+            
+            print()
         }
     }
     
