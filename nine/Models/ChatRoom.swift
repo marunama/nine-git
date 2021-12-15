@@ -4,7 +4,6 @@
 //
 //  Created by User on 2021/06/11.
 //
-
 import Foundation
 import Firebase
 import FirebaseFirestore
@@ -17,10 +16,17 @@ class ChatRoom {
     var latestMessage: Message?
     var documentID: String?
     var partnerUser: User?
+    var groupMembers: [String]
+    var groupUsers: [User] = []
+    var groupfcms: [String]
+    
     
     init(dic: [String: Any]) {
         self.latestMessageId = dic["latestMessageId"] as? String ?? ""
         self.members = dic["members"] as? [String] ?? [String]()
         self.createdAt = dic["createdAt"] as? Timestamp ?? Timestamp()
+        self.groupMembers = dic["groupMembers"] as? [String] ?? [String]()
+        self.groupfcms = dic["groupfcms"] as? [String] ?? [String]()
     }
 }
+

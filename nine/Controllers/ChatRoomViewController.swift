@@ -14,6 +14,7 @@ import FirebaseStorage
 class  ChatRoomViewController: UIViewController {
     
     var user: User?
+    
     var chatroom: ChatRoom?
     
     private let cellId = "cellId"
@@ -24,7 +25,7 @@ class  ChatRoomViewController: UIViewController {
     private var safeAreaBottom: CGFloat {
         self.view.safeAreaInsets.bottom
     }
-    
+    private let createChatroomButton = UIButton()
     private lazy var chatInputAccessoryView: ChatInputAccessoryView = {
         let view = ChatInputAccessoryView()
         view.frame = .init(x: 0, y: 0, width: view.frame.width, height: accessoryHeight)
@@ -32,21 +33,23 @@ class  ChatRoomViewController: UIViewController {
         return view
     }()
     
-    
     @IBOutlet weak var chatRoomTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         setupNotification()
         setupChatRoomTableView()
         fetchMessages()
-        
     }
     
     private func setupNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    private func setup() {
+        createChatroomButton.setTitle("会話を作成する", for: .normal)
+        createChatroomButton.translatesAutoresizingMaskIntoConstraints = false
+        createChatroomButton.frame = .zero
     }
     
     private func setupChatRoomTableView() {
@@ -61,23 +64,16 @@ class  ChatRoomViewController: UIViewController {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        
         guard let userInfo = notification.userInfo else { return }
-        
         if let keyboardFreme = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue {
-            
             if keyboardFreme.height <= accessoryHeight { return }
-            
             let top = keyboardFreme.height - safeAreaBottom
             var moveY = -(top - chatRoomTableView.contentOffset.y)
-            
             if chatRoomTableView.contentOffset.y != -60 { moveY += 60 }
             let contentInset = UIEdgeInsets(top: top, left: 0, bottom: 0, right: 0)
-            
             chatRoomTableView.contentInset = contentInset
             chatRoomTableView.scrollIndicatorInsets = contentInset
             chatRoomTableView.contentOffset = CGPoint(x: 0, y: moveY)
-            
         }
     }
     
@@ -113,6 +109,20 @@ class  ChatRoomViewController: UIViewController {
                     let dic = documentChange.document.data()
                     let message = Message(dic: dic)
                     message.partnerUser = self.chatroom?.partnerUser
+                    var messageUser: User?
+                    
+                    if let users = self.chatroom?.groupUsers {
+                        for user in users {
+                            if message.name == user.username {
+                                messageUser = user
+                            }
+                        }
+                    }
+                    if let messageUser = messageUser {
+                        message.partnerUser = messageUser
+                    }else{
+                        message.partnerUser = self.user
+                    }
                     
                     self.messages.append(message)
                     
@@ -149,9 +159,12 @@ extension ChatRoomViewController: ChatInputAccessoryViewDelegate{
         guard let uid = Auth.auth().currentUser?.uid else { return }
         chatInputAccessoryView.removeText()
         let messageId = randomString(length: 20)
+        let groupFcms = chatroom?.groupfcms
+        let partnerFcms = groupFcms?.filter{ $0 != user?.fcmToken }
         
         
         let docData = [
+            "partnerFcms": partnerFcms as Any,
             "name": name,
             "createdAt": Timestamp(),
             "uid": uid,
