@@ -7,7 +7,7 @@
 
 import UIKit
 //入力したテキストを送る
-protocol ChatInputAccessoryViewDelegate: class {
+protocol ChatInputAccessoryViewDelegate: AnyObject {
     func tappedSendButton(text: String)
 }
 
