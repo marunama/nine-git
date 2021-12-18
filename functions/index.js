@@ -34,20 +34,39 @@ const sendPushMessage = function(token, title, body, badge) {
 }
 
 // 新規依頼作時
+<<<<<<< HEAD
 exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
     .onWrite( async (snapshot, context) => {
         // ここチャットルームのデータが入っている(createdAt, latestMessageId, members)
+=======
+exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}/messages/{messages}')
+    .onWrite( async (snapshot, context) => {
+        
+//        const info = functions.firestore.document('/chatRooms/{chatRooms}/messages/{messages}')
+//        console.log("messages情報")
+//        console.log(info)
+        
+        
+>>>>>>> feature/save-fcmToken
         const chatInfo = snapshot.after.data()
         console.log("チャットルームの情報")
         console.log(chatInfo)
 
+<<<<<<< HEAD
         const receiverFcmToken = chatInfo.membersfcm
+=======
+        const receiverFcmToken = chatInfo.partnerFcms
+>>>>>>> feature/save-fcmToken
 
         console.log("トークン")
         console.log(receiverFcmToken)
         
 
+<<<<<<< HEAD
         
+=======
+        sendPushMessage(receiverFcmToken, chatInfo.name,chatInfo.message,"1");
+>>>>>>> feature/save-fcmToken
        
         
         
@@ -72,7 +91,11 @@ exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
         
         //admin.messaging().send(pushMessage("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", "テスト"))
         //admin.messaging().sendToDevice("flfN7BQVfUUHhshDfmE477:APA91bEivfuzfyl7EzW8Elj22BIn0fI_zqvcEZYkXPr88lZXzvMKykUBM1gTBTFggNO9RCQdiHcqdox4rn2XXRlGMDwI0fSyuf27J1GxGTyorvIBmZEPxCnjZisCJqUrJE98-rIwUu6m", payload);
+<<<<<<< HEAD
         sendPushMessage("receiverFcmToken", "新着","新しいメッセージ","1");
+=======
+        
+>>>>>>> feature/save-fcmToken
 })
 
 
@@ -140,4 +163,7 @@ exports.createMessage = functions.firestore.document('/chatRooms/{chatRooms}')
 
 //     return true;
 //   });
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature/save-fcmToken

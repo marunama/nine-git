@@ -159,9 +159,12 @@ extension ChatRoomViewController: ChatInputAccessoryViewDelegate{
         guard let uid = Auth.auth().currentUser?.uid else { return }
         chatInputAccessoryView.removeText()
         let messageId = randomString(length: 20)
+        let groupFcms = chatroom?.groupfcms
+        let partnerFcms = groupFcms?.filter{ $0 != user?.fcmToken }
         
         
         let docData = [
+            "partnerFcms": partnerFcms as Any,
             "name": name,
             "createdAt": Timestamp(),
             "uid": uid,

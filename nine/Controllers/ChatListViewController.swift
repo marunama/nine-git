@@ -236,8 +236,12 @@ extension ChatListViewController: UITableViewDelegate, UITableViewDataSource {
         chatRoomViewController.user = user
         chatRoomViewController.chatroom = chatrooms[indexPath.row]
         navigationController?.pushViewController(chatRoomViewController, animated: true)
+<<<<<<< HEAD
         
         print()
+=======
+
+>>>>>>> feature/save-fcmToken
     }
     
 }

@@ -141,6 +141,19 @@ class SignUpViewController: UIViewController {
                 
             }
             
+//            Firestore.firestore().collection("users").document(uid).setData(["fcmToken": fcmToken ?? ""], merge: true) {
+//                // error
+//                (err) in
+//                if let err = err {
+//                    print("データベースへの保存が失敗\(err)")
+//                    HUD.hide()
+//                    return
+//                }
+//                print("データベースへの保存が成功")
+//                HUD.hide()
+//                self.dismiss(animated: true, completion: nil)
+//
+//            }
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
