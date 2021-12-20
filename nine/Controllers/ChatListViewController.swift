@@ -22,6 +22,7 @@ class ChatListViewController: UIViewController {
     private var user: User? {
         didSet {
             navigationItem.title = user?.username
+            print()
         }
     }
     
